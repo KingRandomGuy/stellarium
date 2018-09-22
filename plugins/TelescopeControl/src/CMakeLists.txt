@@ -32,6 +32,7 @@ TARGET_LINK_LIBRARIES(TelescopeControl-static
     TelescopeControl_NexStar
     TelescopeControl_Rts2
     TelescopeControl_common
+    TelescopeControl_AltAzGoTo
     )
 
 SET_TARGET_PROPERTIES(TelescopeControl-static PROPERTIES COMPILE_FLAGS "-DQT_STATICPLUGIN")
