@@ -49,6 +49,12 @@
 			"description" : "The Sky-Watcher SynScan AZ GOTO mount used in a number of telescope models.",
 			"server" : "TelescopeServerNexStar",
 			"default_delay" : 500000
+		},
+		{
+			"name" : "AltAzGoTo (compatible)",
+			"description" : "Any telescope or telescope mount compatible with AltAzGoTo.",
+			"server" : "TelescopeServerAltAzGoTo",
+			"default_delay" : 500000
 		}
 	]
 }

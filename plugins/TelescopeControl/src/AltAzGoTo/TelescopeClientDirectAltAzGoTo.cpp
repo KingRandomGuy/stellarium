@@ -98,6 +98,12 @@ TelescopeClientDirectAltAzGoTo::TelescopeClientDirectAltAzGoTo (const QString &n
 }
 
 //! queues a GOTO command
+/*
+
+THIS IS PROBABLY OF INTEREST
+
+
+*/
 void TelescopeClientDirectAltAzGoTo::telescopeGoto(const Vec3d &j2000Pos, StelObjectP selectObject)
 {
 	Q_UNUSED(selectObject);
