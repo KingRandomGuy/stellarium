@@ -6,6 +6,7 @@ add_subdirectory(Lx200)
 add_subdirectory(NexStar)
 add_subdirectory(Rts2)
 add_subdirectory(INDI)
+add_subdirectory(AltAzGoTo)
 
 SET(TelescopeControl_RES ../resources/TelescopeControl.qrc)
 QT5_ADD_RESOURCES(TelescopeControl_RES_CXX ${TelescopeControl_RES})

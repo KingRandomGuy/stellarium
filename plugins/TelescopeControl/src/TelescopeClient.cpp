@@ -26,6 +26,7 @@
 #include "TelescopeClient.hpp"
 #include "Rts2/TelescopeClientJsonRts2.hpp"
 #include "Lx200/TelescopeClientDirectLx200.hpp"
+#include "AltAzGoTo/TelescopeClientDirectAltAzGoTo.hpp"
 #include "NexStar/TelescopeClientDirectNexStar.hpp"
 #include "INDI/TelescopeClientINDI.hpp"
 #include "StelUtils.hpp"
@@ -111,6 +112,10 @@ TelescopeClient *TelescopeClient::create(const QString &url)
 	else if (type == "INDI")
 	{
 		newTelescope = new TelescopeClientINDI(name, params);
+	}
+	else if (type == "TelescopeServerAltAzGoTo") //BM: One of the rare occasions of painless extension
+	{
+		newTelescope= new TelescopeClientDirectAltAzGoTo(name, params, eq);
 	}
 	else
 	{
