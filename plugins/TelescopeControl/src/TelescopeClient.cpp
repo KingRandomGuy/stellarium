@@ -87,7 +87,7 @@ TelescopeClient *TelescopeClient::create(const QString &url)
 	qDebug() << "Creating telescope" << url << "; name/type/equinox/params:" << name << type << ((eq == EquinoxJNow) ? "JNow" : "J2000") << params;
 
 	TelescopeClient * newTelescope = Q_NULLPTR;
-	
+
 	//if (type == "Dummy")
 	if (type == "TelescopeServerDummy")
 	{

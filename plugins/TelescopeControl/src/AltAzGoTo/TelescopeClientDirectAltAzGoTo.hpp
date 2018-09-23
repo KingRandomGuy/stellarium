@@ -38,7 +38,7 @@
 
 class AltAzGoToConnection;
 
-//! Telescope client that connects directly to a Meade AltAzGoTo through a serial port.
+//! Telescope client that connects directly to an AltAzGoTo through a serial port.
 //! This class has been created by merging the code of TelescopeTCP and ServerAltAzGoTo.
 class TelescopeClientDirectAltAzGoTo : public TelescopeClient, public Server
 {

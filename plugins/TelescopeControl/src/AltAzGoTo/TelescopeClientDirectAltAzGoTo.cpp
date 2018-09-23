@@ -106,29 +106,29 @@ THIS IS PROBABLY OF INTEREST
 */
 void TelescopeClientDirectAltAzGoTo::telescopeGoto(const Vec3d &j2000Pos, StelObjectP selectObject)
 {
+	qInfo() << j2000Pos;
 	Q_UNUSED(selectObject);
 
 	if (!isConnected())
 		return;
 
 	Vec3d position = j2000Pos;
-	if (equinox == EquinoxJNow)
-	{
-		const StelCore* core = StelApp::getInstance().getCore();
-		position = core->j2000ToEquinoxEqu(j2000Pos, StelCore::RefractionOff);
-	}
-
+	const StelCore* core = StelApp::getInstance().getCore();
+	/*
+		probably should disable refraction, not sure how it changes things just yet
+	*/
+	position = core->j2000ToAltAz(j2000Pos, StelCore::RefractionOff);
 	//if (writeBufferEnd - writeBuffer + 20 < (int)sizeof(writeBuffer))
 	//TODO: See the else clause, think how to do the same thing
 	{
-		const double ra_signed = atan2(position[1], position[0]);
+		const double az_signed = atan2(position[1], position[0]);
 		//Workaround for the discrepancy in precision between Windows/Linux/PPC Macs and Intel Macs:
-		const double ra = (ra_signed >= 0) ? ra_signed : (ra_signed + 2.0 * M_PI);
-		const double dec = atan2(position[2], std::sqrt(position[0]*position[0]+position[1]*position[1]));
-		unsigned int ra_int = (unsigned int)floor(0.5 + ra*(((unsigned int)0x80000000)/M_PI));
-		int dec_int = (int)floor(0.5 + dec*(((unsigned int)0x80000000)/M_PI));
+		const double az = (az_signed >= 0) ? az_signed : (az_signed + 2.0 * M_PI);
+		const double alt = atan2(position[2], std::sqrt(position[0]*position[0]+position[1]*position[1]));
+		unsigned int az_int = (unsigned int)floor(0.5 + az*(((unsigned int)0x80000000)/M_PI));
+		int alt_int = (int)floor(0.5 + alt*(((unsigned int)0x80000000)/M_PI));
 
-		gotoReceived(ra_int, dec_int);
+		gotoReceived(az_int, alt_int);
 	}
 	/*
 		else
@@ -237,19 +237,17 @@ bool TelescopeClientDirectAltAzGoTo::isInitialized(void) const
 }
 
 //Merged from Connection::sendPosition() and TelescopeTCP::performReading()
-void TelescopeClientDirectAltAzGoTo::sendPosition(unsigned int ra_int, int dec_int, int status)
+void TelescopeClientDirectAltAzGoTo::sendPosition(unsigned int az_int, int alt_int, int status)
 {
 	//Server time is "now", because this class is the server
 	const qint64 server_micros = (qint64) getNow();
-	const double ra  =  ra_int * (M_PI/(unsigned int)0x80000000);
-	const double dec = dec_int * (M_PI/(unsigned int)0x80000000);
-	const double cdec = cos(dec);
-	Vec3d position(cos(ra)*cdec, sin(ra)*cdec, sin(dec));
-	Vec3d j2000Position = position;
-	if (equinox == EquinoxJNow)
-	{
-		const StelCore* core = StelApp::getInstance().getCore();
-		j2000Position = core->equinoxEquToJ2000(position, StelCore::RefractionOff);
-	}
+	const double az  =  az_int * (M_PI/(unsigned int)0x80000000);
+	const double alt = alt_int * (M_PI/(unsigned int)0x80000000);
+	const double calt = cos(alt);
+	Vec3d position(cos(az)*calt, sin(az)*calt, sin(alt));
+	Vec3d altAzPosition = position;
+	const StelCore* core = StelApp::getInstance().getCore();
+	//not tested, mess with refraction on/off later
+	Vec3d j2000Position = core->altAzToJ2000(altAzPosition, StelCore::RefractionOff);
 	interpolatedPosition.add(j2000Position, getNow(), server_micros, status);
 }
